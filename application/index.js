@@ -143,8 +143,20 @@ async function submitT(organization, channel, chaincode, transactionName, transa
         }
         console.log('*** Transaction committed successfully');
 
+        const events = await network.getChaincodeEvents(chaincode, { startBlock: BigInt(0) });
+        try {
+            for await (const event of events) {
+                const asset = new TextDecoder().decode(event.payload);
 
-
+                console.log(`*** Contract Event Received: ${event.eventName}`)
+                console.log(`-- asset: ${asset}`)
+                console.log(`-- chaincodeName: ${event.chaincodeName}`)
+                console.log(`-- transactionId: ${event.transactionId}`)
+                console.log(`-- blockNumber: ${event.blockNumber}\n`)
+            }
+        } finally {
+            events.close();
+        }
     } catch (err) {
         console.error(err)
     } finally {
