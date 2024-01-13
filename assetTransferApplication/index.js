@@ -26,7 +26,7 @@ const chaincodeName = envOrDefault('CHAINCODE_NAME', 'assetTransfer');
 const mspId = 'AgencyMSP';
 
 // Path to crypto materials.
-const cryptoPath = '/workspaces/fabric-test-network-example/test-network/organizations/peerOrganizations/agency.quotation.com/';
+const cryptoPath = '/workspaces/Fabric2.5_school_material/test-network/organizations/peerOrganizations/agency.quotation.com/';
 
 // Path to user private key directory.
 const keyDirectoryPath = cryptoPath + 'users/User1@agency.quotation.com/msp/keystore'
