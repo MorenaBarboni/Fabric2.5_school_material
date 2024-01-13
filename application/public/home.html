@@ -39,11 +39,6 @@
                 </div>
             </div>
 
-            <div class="form-group mb-3 row"><label for="msp" class="col-md-5 col-form-label">MSP ID</label>
-                <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="msp" value="AgencyMSP" required>
-                </div>
-            </div>
 
             <h5 class="my-4">Transaction</h5>
 
@@ -51,13 +46,14 @@
             <div class="form-group mb-3 row">
                 <label for="txName" class="col-md-5 col-form-label">Transaction Name</label>
                 <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="txName" value="getQuotation" required>
+                    <input type="text" class="form-control form-control-lg" id="txName" value="requestQuotation"
+                        required>
                 </div>
             </div>
             <div class="form-group mb-3 row"><label for="txParams" class="col-md-5 col-form-label">Transaction
                     Parameters</label>
                 <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="txParams" value="quotation1">
+                    <input type="text" class="form-control form-control-lg" id="txParams" value="quotation1,laptop,500">
                 </div>
             </div>
             <hr class="my-4" />
@@ -88,12 +84,6 @@
                 return
             }
 
-            var msp = document.getElementById("msp").value
-            if (!msp) {
-                alert("'MSP ID' field missing!")
-                return
-            }
-
             var txName = document.getElementById("txName").value
             if (!txName) {
                 alert("'Transaction Name' field missing!")
@@ -121,7 +111,6 @@
                 organization,
                 channel,
                 chaincode,
-                msp,
                 txName,
                 txParams: paramsArr
             }))

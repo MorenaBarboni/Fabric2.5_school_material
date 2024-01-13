@@ -5,7 +5,6 @@
  */
 const grpc = require('@grpc/grpc-js')
 const { connect, signers } = require('@hyperledger/fabric-gateway')
-const { Console } = require('console')
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
@@ -14,8 +13,19 @@ const { TextDecoder } = require('util')
 // Path to crypto materials.
 const cryptoPath = '/workspaces/Fabric2.5_school_material/test-network/organizations/peerOrganizations/';
 
-// Gateway peer endpoint.
-const peerEndpoint = 'localhost:11051'
+// Gateway peer endpoint
+const peerEndpoints = {
+    'suppliera.quotation.com': 'localhost:7051',
+    'supplierb.quotation.com': 'localhost:9051',
+    'agency.quotation.com': 'localhost:11051'
+}
+
+// mspIDs
+const orgMspIds = {
+    'suppliera.quotation.com': 'SupplierAMSP',
+    'supplierb.quotation.com': 'SupplierBMSP',
+    'agency.quotation.com': 'AgencyMSP'
+}
 
 const utf8Decoder = new TextDecoder();
 
@@ -29,13 +39,11 @@ async function newGrpcConnection(organization) {
     const peerHostAlias = `peer0.${organization}`
     // Path to peer tls certificate.
     const tlsCertPath = path.join(cryptoPath, `${organization}/peers/${peerHostAlias}/tls/ca.crt`)
-    console.log(tlsCertPath);
 
     const tlsRootCert = fs.readFileSync(tlsCertPath);
     const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
 
-
-    return new grpc.Client(peerEndpoint, tlsCredentials, {
+    return new grpc.Client(peerEndpoints[organization], tlsCredentials, {
         'grpc.ssl_target_name_override': peerHostAlias,
     });
 }
@@ -43,13 +51,12 @@ async function newGrpcConnection(organization) {
 /**
  * Create a new user identity
  * @param {String} organization | organization domain
- * @param {String} mspId | organizazion MSP ID
  * @returns the user credentials
  */
-function newIdentity(organization, mspId) {
+function newIdentity(organization) {
     // Path to user certificate
     const certPath = path.join(cryptoPath, `${organization}/users/User1@${organization}/msp/signcerts/User1@${organization}-cert.pem`)
-
+    const mspId = orgMspIds[organization];
     const credentials = fs.readFileSync(certPath);
     return { mspId, credentials }
 }
@@ -75,26 +82,24 @@ function newSigner(organization) {
   * @param {String} organization | organization domain
   * @param {String} channel | channel name
   * @param {String} chaincode | chaincode name 
-  * @param {String} mspId | organization mspID 
   * @param {String} transactionName | transaction method
   * @param {Array} transactionParams | transaction parameters
   * @returns a new signing implementation for the user
  */
-async function submitT(organization, channel, chaincode, mspId, transactionName, transactionParams) {
+async function submitT(organization, channel, chaincode, transactionName, transactionParams) {
 
     organization = organization.toLowerCase()
 
     //Establish gRPC connection
-    console.log("Creating gRPC connection...")
+    console.log("\nCreating gRPC connection...")
     const client = await newGrpcConnection(organization)
 
-    console.log("Retrieving user identity...")
+    console.log(`Retrieving identity for User1 of ${organization} ...`)
     //Retrieve User1's identity
-    const id = newIdentity(organization, mspId)
+    const id = newIdentity(organization)
     //Retrieve signing implementation
     const signer = newSigner(organization)
 
-    console.log("Connecting Gateway...")
     //Connect gateway
     const gateway = connect({
         client,
@@ -130,12 +135,14 @@ async function submitT(organization, channel, chaincode, mspId, transactionName,
         } else {
             resp = await contract.submitTransaction(transactionName, ...transactionParams)
         }
-
-
         const resultJson = utf8Decoder.decode(resp);
-        const result = JSON.parse(resultJson);
-        console.log('*** Result:', result);
+
+        if (resultJson && resultJson !== null) {
+            const result = JSON.parse(resultJson);
+            console.log('*** Result:', result);
+        }
         console.log('*** Transaction committed successfully');
+
 
 
     } catch (err) {
