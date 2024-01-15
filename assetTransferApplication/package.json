@@ -4,7 +4,7 @@
     "description": "Asset Transfer application solution",
     "main": "index.js",
     "scripts": {
-        "start": "node server.js",
+        "start": "node server.js"
     },
     "author": "Alessandro Marcelletti",
     "license": "ISC",
