@@ -1,11 +1,10 @@
 {
-    "name": "quotation_app",
+    "name": "assettransfer_app",
     "version": "1.0.0",
-    "description": "",
+    "description": "Asset Transfer application solution",
     "main": "index.js",
     "scripts": {
         "start": "node server.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Alessandro Marcelletti",
     "license": "ISC",
@@ -14,8 +13,6 @@
         "@hyperledger/fabric-gateway": "^1.4.0",
         "crypto": "^1.0.1",
         "express": "^4.17.1",
-        "fabric-ca-client": "^2.2.0",
-        "fabric-network": "^2.2.0",
         "js-yaml": "^3.14.0"
     }
 }
