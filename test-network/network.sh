@@ -336,7 +336,7 @@ function invokeChaincode() {
   export FABRIC_CFG_PATH=${PWD}/../config
 
   . scripts/envVar.sh
-  . scripts/utils.hs
+  . scripts/utils.sh
   . scripts/ccutils.sh
 
   setGlobals ${ORG}
