@@ -146,7 +146,7 @@ async function submitT(organization, channel, chaincode, transactionName, transa
         const events = await network.getChaincodeEvents(chaincode, { startBlock: BigInt(0) });
         try {
             for await (const event of events) {
-                const asset = new TextDecoder().decode(event.payload);
+               const asset = new TextDecoder().decode(event.payload);
 
                 console.log(`*** Contract Event Received: ${event.eventName}`)
                 console.log(`-- asset: ${asset}`)
@@ -166,4 +166,21 @@ async function submitT(organization, channel, chaincode, transactionName, transa
 
 }
 
-module.exports = { submitT }
+function submit(organization, channel, chaincode, transactionName, transactionParams) {
+    if (!organization) {
+        console.log("organization argument missing!")
+    }
+    else if (!channel) {
+        console.log("channel argument missing!")
+    }
+    else if (!chaincode) {
+        console.log("chaincode argument missing!")
+    }
+    else if (!transactionName) {
+        console.log("transactionName argument missing!")
+    } else {
+        submitT(organization, channel, chaincode, transactionName, transactionParams)
+    }
+}
+
+module.exports = { submitT, submit }
