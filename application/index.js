@@ -3,15 +3,16 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+const appRoot = require('app-root-path');
 const grpc = require('@grpc/grpc-js')
 const { connect, signers } = require('@hyperledger/fabric-gateway')
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
 const { TextDecoder } = require('util')
-
+const testNetDir = appRoot.path.split('/').slice(0, -1).join('/') + "/test-network";
 // Path to crypto materials.
-const cryptoPath = '/workspaces/Fabric2.5_school_material/test-network/organizations/peerOrganizations/';
+const cryptoPath = testNetDir + '/organizations/peerOrganizations/';
 
 // Gateway peer endpoint
 const peerEndpoints = {
@@ -183,4 +184,10 @@ function submit(organization, channel, chaincode, transactionName, transactionPa
     }
 }
 
-module.exports = { submitT, submit }
+function r() {
+    const testNetDir = rootDir.split('/').slice(0, -1).join('/');
+
+    console.log(testNetDir);
+}
+
+module.exports = { submitT, submit, r }
