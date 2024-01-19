@@ -184,10 +184,4 @@ function submit(organization, channel, chaincode, transactionName, transactionPa
     }
 }
 
-function r() {
-    const testNetDir = rootDir.split('/').slice(0, -1).join('/');
-
-    console.log(testNetDir);
-}
-
-module.exports = { submitT, submit, r }
+module.exports = { submitT, submit }
